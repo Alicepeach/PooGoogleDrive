@@ -38,6 +38,10 @@ public class Vista extends javax.swing.JFrame {
         txtPassword = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        txtIp = new javax.swing.JTextField();
+        txtPuerto = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -50,26 +54,33 @@ public class Vista extends javax.swing.JFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         btnLogin.setText("Login");
-        getContentPane().add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 140, 100, 30));
+        getContentPane().add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, 100, 30));
         btnLogin.getAccessibleContext().setAccessibleName("btnLogin");
 
         btnSignup.setText("Signup");
-        btnSignup.setActionCommand("Signup");
-        getContentPane().add(btnSignup, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 180, 100, 30));
+        getContentPane().add(btnSignup, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 250, 100, 30));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel1.setText("Usuario:");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 50, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel2.setText("Contraseña:");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, -1, -1));
-        getContentPane().add(txtUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 50, 100, -1));
-        getContentPane().add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 100, -1));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 160, -1, -1));
+        getContentPane().add(txtUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, 100, -1));
+        getContentPane().add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 150, 100, -1));
 
         jLabel6.setText("Cliente");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 20, -1, -1));
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 10, -1, -1));
         getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 290, 0));
+        getContentPane().add(txtIp, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 80, 100, -1));
+        getContentPane().add(txtPuerto, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 50, 100, -1));
+
+        jLabel3.setText("Dirección ip:");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, -1, -1));
+
+        jLabel4.setText("Puerto:");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -114,12 +125,16 @@ public class Vista extends javax.swing.JFrame {
     public javax.swing.JButton btnSignup;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextArea jTextArea1;
+    public javax.swing.JTextField txtIp;
     public javax.swing.JTextField txtPassword;
+    public javax.swing.JTextField txtPuerto;
     public javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
 }
