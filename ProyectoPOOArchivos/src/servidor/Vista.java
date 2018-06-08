@@ -14,8 +14,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -33,6 +36,8 @@ public class Vista extends javax.swing.JFrame {
         setTitle("Cliente");
     }
 
+    private Socket s;
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -57,12 +62,6 @@ public class Vista extends javax.swing.JFrame {
         lblDirIp = new javax.swing.JLabel();
         lblPuerto = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
-        jLabel1 = new javax.swing.JLabel();
-        jSeparator3 = new javax.swing.JSeparator();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        txtRegisUser = new javax.swing.JTextField();
-        fieldRegisPassword = new javax.swing.JPasswordField();
         fieldPassword = new javax.swing.JPasswordField();
 
         jTextArea1.setColumns(20);
@@ -83,7 +82,7 @@ public class Vista extends javax.swing.JFrame {
                 btnLoginActionPerformed(evt);
             }
         });
-        jPanel1.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, 100, 30));
+        jPanel1.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 190, 100, 30));
         btnLogin.getAccessibleContext().setAccessibleName("btnLogin");
 
         btnSignup.setBackground(new java.awt.Color(102, 102, 255));
@@ -95,7 +94,7 @@ public class Vista extends javax.swing.JFrame {
                 btnSignupActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSignup, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 390, 110, 30));
+        jPanel1.add(btnSignup, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 110, 30));
 
         lblUser.setFont(new java.awt.Font("Yu Gothic", 0, 14)); // NOI18N
         lblUser.setText("Usuario:");
@@ -134,27 +133,6 @@ public class Vista extends javax.swing.JFrame {
         jPanel1.add(lblPuerto, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, -1, -1));
         jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 290, 10));
 
-        jLabel1.setFont(new java.awt.Font("Yu Gothic", 0, 14)); // NOI18N
-        jLabel1.setText("¿No te has registrado?");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 260, -1, -1));
-        jPanel1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 290, -1));
-
-        jLabel2.setFont(new java.awt.Font("Yu Gothic", 0, 14)); // NOI18N
-        jLabel2.setText("Usuario:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 300, -1, -1));
-
-        jLabel3.setFont(new java.awt.Font("Yu Gothic", 0, 14)); // NOI18N
-        jLabel3.setText("Contraseña:");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 340, -1, -1));
-
-        txtRegisUser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRegisUserActionPerformed(evt);
-            }
-        });
-        jPanel1.add(txtRegisUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 300, 100, -1));
-        jPanel1.add(fieldRegisPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 340, 100, -1));
-
         fieldPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldPasswordActionPerformed(evt);
@@ -171,48 +149,57 @@ public class Vista extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
-                .addGap(1, 1, 1))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtRegisUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRegisUserActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtRegisUserActionPerformed
-
     private void btnSignupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignupActionPerformed
         // TODO add your handling code here:
-        String user = txtRegisUser.getText();
-        char[] passTemp = fieldRegisPassword.getPassword();
+        String ip = txtIp.getText();
+        int puerto = Integer.parseInt(txtPuerto.getText());
+        
+        
+        String user = txtUser.getText();
+        char[] passTemp = fieldPassword.getPassword();
         String password = new String(passTemp);
         System.out.println(password);
         //Declaración
-        File archivo;
-        FileWriter fw;
-        BufferedWriter bw;
-        String ruta = "C:\\Users\\alice\\Desktop\\usuariosExistentes.txt";
-        try{
+        //File archivo;
+        //FileWriter fw;
+        //BufferedWriter bw;
+        try {
+            //Mandamos la información al servidor a través de un PrintStream
+            PrintStream ps = new PrintStream(s.getOutputStream());
+            ps.println(user + ":" +password);
+            ps.flush();
+            /*
+            String ruta = "usuariosExistentes.txt";
+            try{
             if(!getUsuario(user)){
-                archivo = new File(ruta);
-                //True verifica si el archivo existe o no, si no, lo crea.
-                fw = new FileWriter(archivo, true);
-                bw = new BufferedWriter(fw);
-
-                bw.write(user + ":" + password);
-                bw.newLine();
-                JOptionPane.showMessageDialog(this,"Se registró correctamente");
-                bw.flush();
-                bw.close();
-                fw.close();
+            archivo = new File(ruta);
+            //True verifica si el archivo existe o no, si no, lo crea.
+            fw = new FileWriter(archivo, true);
+            bw = new BufferedWriter(fw);
+            
+            bw.write(user + ":" + password);
+            bw.newLine();
+            JOptionPane.showMessageDialog(this,"Se registró correctamente");
+            bw.flush();
+            bw.close();
+            fw.close();
             }
             else{
-                JOptionPane.showMessageDialog(this, "El usuario ya existe");
+            JOptionPane.showMessageDialog(this, "El usuario ya existe");
             }
-        }catch(IOException ioe){}
-        
-        //Verificar usuarios repetidos     
+            }catch(IOException ioe){}
+            */
+            //Verificar usuarios repetidos     
+        } catch (IOException ex) {
+            Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnSignupActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
@@ -231,28 +218,31 @@ public class Vista extends javax.swing.JFrame {
             while(datos!=null){
                 if(datos.equals(user+":"+password)){
                     try{
-                    Socket s = new Socket (ip,puerto);
-                    InputStreamReader  entradaSocket = new InputStreamReader(s.getInputStream());
-                    BufferedReader entrada = new BufferedReader(entradaSocket);
-                    DataOutputStream salida = new DataOutputStream(s.getOutputStream());
-                    vistaCliente vc = new vistaCliente(s, user);
-                    vc.setVisible(true);
-                    Thread a = new Thread(vc);
-                    dispose();
-                    } catch (Exception e) {
+                        s = new Socket (ip,puerto);
+                        InputStreamReader  entradaSocket = new InputStreamReader(s.getInputStream());
+                       // BufferedReader entrada = new BufferedReader(entradaSocket);
+                       // DataOutputStream salida = new DataOutputStream(s.getOutputStream());
+                        PrintStream escribir = new PrintStream(s.getOutputStream());
+                        escribir.println(user);
+                        escribir.flush();
+                        vistaCliente vc = new vistaCliente(s,user);
+                        vc.setVisible(true);
+                        Thread a = new Thread(vc);
+                        a.start();
+                        dispose();
+                    }catch(Exception e) {
                         System.out.println("Ha habido un fallo en el cliente "+e.getMessage());
                     }
                     JOptionPane.showMessageDialog(this, "Haz ingresado correctamente");
-                    System.out.println("Bienvenido : " +user+ ". Te has conectado al servidor :" +ip +" El el puerto : "+puerto);
-                    break;
+                        System.out.println("Bienvenido : " + user + ". Te has conectado al servidor :" + ip +" El el puerto : "+puerto);
+                        break;
                 }else{
                     datos=br.readLine();
                 }
             }
             
         }catch(Exception e){}
-        
-        
+               
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void fieldPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldPasswordActionPerformed
@@ -321,16 +311,11 @@ public class Vista extends javax.swing.JFrame {
     public javax.swing.JButton btnLogin;
     public javax.swing.JButton btnSignup;
     public javax.swing.JPasswordField fieldPassword;
-    public javax.swing.JPasswordField fieldRegisPassword;
-    public javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     public javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JSeparator jSeparator1;
     public javax.swing.JSeparator jSeparator2;
-    public javax.swing.JSeparator jSeparator3;
     private javax.swing.JTextArea jTextArea1;
     public javax.swing.JLabel lblDirIp;
     public javax.swing.JLabel lblPassword;
@@ -338,7 +323,6 @@ public class Vista extends javax.swing.JFrame {
     public javax.swing.JLabel lblUser;
     public javax.swing.JTextField txtIp;
     public javax.swing.JTextField txtPuerto;
-    private javax.swing.JTextField txtRegisUser;
     public javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
 }

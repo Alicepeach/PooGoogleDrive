@@ -16,8 +16,13 @@ import java.net.Socket;
  * @author alice
  */
 public class vistaCliente extends javax.swing.JFrame implements Runnable{
-    Socket s;
-    String nombre = "";
+    private String host;
+    private int port;
+    boolean InicioSesion = false;
+    private final Socket s;
+    private final String nombre;
+    private static BufferedReader br;
+    private PrintStream ps;
     /**
      * Creates new form vistaCliente
      */
@@ -25,9 +30,11 @@ public class vistaCliente extends javax.swing.JFrame implements Runnable{
         initComponents();
         this.s = s;
         this.nombre = nombre;
+        System.out.println("Hola");
+        System.out.println("Me inicié");
         try{
-            PrintStream ps = new PrintStream(s.getOutputStream());
-            BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            ps = new PrintStream(s.getOutputStream());
+            br = new BufferedReader(new InputStreamReader(s.getInputStream()));
         }catch(IOException ex){ }
     }
 
@@ -107,11 +114,6 @@ public class vistaCliente extends javax.swing.JFrame implements Runnable{
     public String getNombre() {
         return nombre;
     }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-   
     
     public void run(){
         
