@@ -158,48 +158,24 @@ public class Vista extends javax.swing.JFrame {
 
     private void btnSignupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignupActionPerformed
         // TODO add your handling code here:
+        String tipo = "registro";
         String ip = txtIp.getText();
         int puerto = Integer.parseInt(txtPuerto.getText());
-        
-        
+        Socket s;
         String user = txtUser.getText();
         char[] passTemp = fieldPassword.getPassword();
         String password = new String(passTemp);
         System.out.println(password);
-        //Declaración
-        //File archivo;
-        //FileWriter fw;
-        //BufferedWriter bw;
         try {
-            //Mandamos la información al servidor a través de un PrintStream
+            s = new Socket(ip, puerto);
             PrintStream ps = new PrintStream(s.getOutputStream());
-            ps.println(user + ":" +password);
+            ps.println(tipo + "@" + user + ":" +password);
             ps.flush();
-            /*
-            String ruta = "usuariosExistentes.txt";
-            try{
-            if(!getUsuario(user)){
-            archivo = new File(ruta);
-            //True verifica si el archivo existe o no, si no, lo crea.
-            fw = new FileWriter(archivo, true);
-            bw = new BufferedWriter(fw);
-            
-            bw.write(user + ":" + password);
-            bw.newLine();
-            JOptionPane.showMessageDialog(this,"Se registró correctamente");
-            bw.flush();
-            bw.close();
-            fw.close();
-            }
-            else{
-            JOptionPane.showMessageDialog(this, "El usuario ya existe");
-            }
-            }catch(IOException ioe){}
-            */
-            //Verificar usuarios repetidos     
+            s.close();
         } catch (IOException ex) {
             Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /**/
     }//GEN-LAST:event_btnSignupActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
@@ -256,22 +232,7 @@ public class Vista extends javax.swing.JFrame {
     private void txtIpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIpActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtIpActionPerformed
-    boolean getUsuario(String user){
-	try{
-            String ruta = "C:\\Users\\alice\\Desktop\\usuariosExistentes.txt";
-            FileReader fr=new FileReader(ruta);
-            BufferedReader br=new BufferedReader(fr);
-            String datos=br.readLine();
-            while(datos!=null){
-                    if(datos.substring(0,datos.indexOf(":")).equals(user)){
-                            return true;
-                    }else{
-                            datos=br.readLine();
-                    }
-            }
-        }catch(Exception e){}
-        return false;
-    }
+    
     /**
      * @param args the command line arguments
      */

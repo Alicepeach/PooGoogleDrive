@@ -9,12 +9,14 @@ import cliente.vistaCliente;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -46,71 +48,70 @@ public class Servidor extends Thread{
     }
     
     
-    public static void main(String[] args) throws IOException {
-    ServerSocket ss = null;
-    Socket cliente = null;
-    String nombre = null;
-    BufferedReader br = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
-    
-    //Primero realizamos la conexión
-    try{
-        ss = new ServerSocket(0);
-        System.out.println("Servidor aceptando conexiones en puerto" + ss.getLocalPort());
-    }catch(IOException e){
-        //Logger.getLogger(Servidor.class.getName()).log(Level.SERVERE, null, ex);
-    }
-    
-    while(true){
+    public static void main(String[] args) throws Exception {
+        ServerSocket ss = null;
+        Socket cliente = null;
+        String nombre = null;
+
+        //Primero realizamos la conexión
         try{
-            
-            /*
-            String ruta = "usuariosExistentes.txt";
+            ss = new ServerSocket(0);
+            System.out.println("Servidor aceptando conexiones en puerto" + ss.getLocalPort());
+        }catch(IOException e){
+            //Logger.getLogger(Servidor.class.getName()).log(Level.SERVERE, null, ex);
+        }
+        File archivo;
+        FileWriter fw;
+        BufferedWriter bw;
+        BufferedReader entrada;
+        while(true){
             try{
-            if(!getUsuario(user)){
-            archivo = new File(ruta);
-            //True verifica si el archivo existe o no, si no, lo crea.
-            fw = new FileWriter(archivo, true);
-            bw = new BufferedWriter(fw);
-            
-            bw.write(user + ":" + password);
-            bw.newLine();
-            JOptionPane.showMessageDialog(this,"Se registró correctamente");
-            bw.flush();
-            bw.close();
-            fw.close();
-            }
-            else{
-            JOptionPane.showMessageDialog(this, "El usuario ya existe");
-            }
-            }catch(IOException ioe){}
-            */
-            //Verificar usuarios repetidos  
-            
-            
-            
-            
-            
-            
-            
-            
-            cliente = ss.accept();
-            BufferedReader entrada = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
-            nombre = entrada.readLine();
-            
-            boolean temp = seEncuentraElCliente(nombre);
-            PrintStream escribir = new PrintStream(cliente.getOutputStream());
-            escribir.println(String.valueOf(temp).toLowerCase());
-            escribir.flush();
-            //Si se encuentra el cliente, entonces se agrega al arreglo de clientes
-            if(!temp){
-            vistaCliente c = new vistaCliente(cliente, nombre);
-            clientes.add(c);
-            Servidor hilo = new Servidor(c);
-            hilo.start();
-            }
-            }catch(IOException ex){
-                
-            }
+                cliente = ss.accept();
+                entrada = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
+                nombre = entrada.readLine();
+                System.out.println(nombre.substring(0,nombre.indexOf("@")).equals("registro"));
+                if(nombre.substring(0,nombre.indexOf("@")).equals("registro")){
+                    
+                    try {
+                        //Mandamos la información al servidor a través de un PrintStream
+                        
+                        String user = nombre.substring(nombre.indexOf("@")+1, nombre.indexOf(":"));
+                        String password = nombre.substring(nombre.indexOf(":")+1);
+                        System.out.println(user + " \n "+ password);
+                        String ruta = "/home/emanuel/Documentos/UsuariosExistentes.txt";
+                        try{
+                            if(!getUsuario(user)){
+                                archivo = new File(ruta);
+                                //True verifica si el archivo existe o no, si no, lo crea.
+                                fw = new FileWriter(archivo, true);
+                                bw = new BufferedWriter(fw);
+
+                                bw.write(user + ":" + password);
+                                bw.newLine();
+                                bw.flush();
+                                bw.close();
+                                fw.close();
+                                System.out.println("Se registro un nuevo usuario: " + user);
+                                entrada.close();
+                            }
+                            else{
+                            }
+                        }catch(IOException ioe){}
+                    }catch(Exception e){}
+                }else{
+                    boolean temp = seEncuentraElCliente(nombre);
+                    PrintStream escribir = new PrintStream(cliente.getOutputStream());
+                    escribir.println(String.valueOf(temp).toLowerCase());
+                    escribir.flush();
+                    //Si se encuentra el cliente, entonces se agrega al arreglo de clientes
+                    if(!temp){
+                        vistaCliente c = new vistaCliente(cliente, nombre);
+                        clientes.add(c);
+                        Servidor hilo = new Servidor(c);
+                        hilo.start();
+                    }
+                }
+            }catch(Exception e){}
         }
     }
     
@@ -197,6 +198,22 @@ public class Servidor extends Thread{
         this.destroy();
     }
     
+    private static boolean getUsuario(String user){
+	try{
+            String ruta = "usuariosExistentes.txt";
+            FileReader fr=new FileReader(ruta);
+            BufferedReader br=new BufferedReader(fr);
+            String datos=br.readLine();
+            while(datos!=null){
+                    if(datos.substring(0,datos.indexOf(":")).equals(user)){
+                            return true;
+                    }else{
+                            datos=br.readLine();
+                    }
+            }
+        }catch(Exception e){}
+        return false;
+    }
     
     
 }
