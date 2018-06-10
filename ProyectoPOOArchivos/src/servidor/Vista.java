@@ -158,17 +158,23 @@ public class Vista extends javax.swing.JFrame {
 
     private void btnSignupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignupActionPerformed
         // TODO add your handling code here:
+        //Variable auxiliar "registro"
         String tipo = "registro";
+        //Obtenemos datos desde la vista
         String ip = txtIp.getText();
         int puerto = Integer.parseInt(txtPuerto.getText());
-        Socket s;
         String user = txtUser.getText();
         char[] passTemp = fieldPassword.getPassword();
         String password = new String(passTemp);
-        System.out.println(password);
+        //Creamos un nuevo Socket
+        Socket s;
+        //System.out.println(password);
         try {
+            //Realizamos la conexión
             s = new Socket(ip, puerto);
+            //Enviamos datos de la conexión por medio de PrintStream
             PrintStream ps = new PrintStream(s.getOutputStream());
+            //PrintStream recibe una cadena... le pasamos el usuario y la contraseña.
             ps.println(tipo + "@" + user + ":" +password);
             ps.flush();
             s.close();
@@ -179,46 +185,28 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSignupActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        
+        //Obtenemos los datos desde la vista
         String ip = txtIp.getText();
         int puerto = Integer.parseInt(txtPuerto.getText());
         String user = txtUser.getText();
         char[] passTemp = fieldPassword.getPassword();
+        //Hacemos un casteo de la contraseña
         String password = new String(passTemp);
         
-        try{
-            String ruta = "C:\\Users\\alice\\Desktop\\usuariosExistentes.txt";
-            FileReader fr=new FileReader(ruta);
-            BufferedReader br=new BufferedReader(fr);
-            String datos=br.readLine();
-            while(datos!=null){
-                if(datos.equals(user+":"+password)){
-                    try{
-                        s = new Socket (ip,puerto);
-                        InputStreamReader  entradaSocket = new InputStreamReader(s.getInputStream());
-                       // BufferedReader entrada = new BufferedReader(entradaSocket);
-                       // DataOutputStream salida = new DataOutputStream(s.getOutputStream());
-                        PrintStream escribir = new PrintStream(s.getOutputStream());
-                        escribir.println(user);
-                        escribir.flush();
-                        vistaCliente vc = new vistaCliente(s,user);
-                        vc.setVisible(true);
-                        Thread a = new Thread(vc);
-                        a.start();
-                        dispose();
-                    }catch(Exception e) {
-                        System.out.println("Ha habido un fallo en el cliente "+e.getMessage());
-                    }
-                    JOptionPane.showMessageDialog(this, "Haz ingresado correctamente");
-                        System.out.println("Bienvenido : " + user + ". Te has conectado al servidor :" + ip +" El el puerto : "+puerto);
-                        break;
-                }else{
-                    datos=br.readLine();
-                }
-            }
-            
-        }catch(Exception e){}
-               
+        /**/
+        try {
+            //Realizamos la conexión
+            s = new Socket(ip, puerto);
+            String tipo = "logueo";
+            //Enviamos datos de la conexión por medio de PrintStream
+            PrintStream ps = new PrintStream(s.getOutputStream());
+            //PrintStream recibe una cadena... le pasamos el usuario y la contraseña.
+            ps.println(tipo + "@" + user + ":" +password);
+            ps.flush();
+            s.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void fieldPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldPasswordActionPerformed
